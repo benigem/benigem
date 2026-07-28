@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گیم شاپ | فروشگاه اکانت گیم</title>
+    <style>
+        /* ===== فونت و ریست ===== */
+        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+
+        :root {
+            --glass-frost: 0.15;
+            --glass-saturation: 1.8;
+            --filter-id: url(#glass-filter);
+            --transition-speed: 0.5s;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            color: #ffffff;
+            background: #0a0a1a;
+            overflow-x: hidden;
+            padding-bottom: 120px; /* فضای خالی برای نوار شناور پایین */
+        }
+
+        /* ===== پس‌زمینه متحرک (از کد شما) ===== */
+        .background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        }
+
+        .blob {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6;
+            animation: floatBlob 10s ease-in-out infinite;
+        }
+        .blob-1 { width: 400px; height: 400px; background: #7c3aed; top: -10%; right: -10%; animation-delay: 0s; }
+        .blob-2 { width: 350px; height: 350px; background: #ec4899; bottom: 10%; left: -10%; animation-delay: -3s; }
+        .blob-3 { width: 300px; height: 300px; background: #06b6d4; top: 40%; left: 30%; animation-delay: -6s; }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.1); }
+        }
+
+        /* ===== هدر ساده ===== */
+        .top-header {
+            text-align: center; padding: 40px 20px 20px;
+        }
+        .top-header h1 { font-size: 36px; color: #facc15; text-shadow: 0 0 20px rgba(250, 204, 21, 0.5); }
+        .top-header p { color: #a5b4fc; margin-top: 10px; font-size: 16px; }
+
+        /* ===== محصولات ===== */
+        .products {
+            max-width: 1200px; margin: 0 auto; padding: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
+        }
+
+        .card {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(124, 58, 237, 0.3); }
+
+        .card-img { width: 100%; height: 180px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .card-tag {
+            display: inline-block; background: #7c3aed; color: white;
+            padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 10px;
+        }
+        .card-body h3 { font-size: 18px; margin-bottom: 8px; color: #e2e8f0; }
+        .card-body p { font-size: 13px; color: #94a3b8; margin-bottom: 15px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .price { font-size: 18px; font-weight: bold; color: #facc15; }
+        .price small { font-size: 11px; color: #94a3b8; }
+        
+        .buy-btn {
+            background: linear-gradient(135deg, #059669, #10b981); color: white;
+            padding: 10px 20px; border-radius: 25px; font-size: 14px; font-weight: bold;
+            transition: transform 0.3s; display: inline-block; text-decoration: none;
+        }
+        .buy-btn:hover { transform: scale(1.05); }
+
+        /* ===== نوار شیشه‌ای اپل (Liquid Glass Nav) ===== */
+        .nav-container {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .nav-bar {
+            position: relative; display: flex; align-items: center;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: var(--filter-id) saturate(var(--glass-saturation, 1));
+            backdrop-filter: var(--filter-id) saturate(var(--glass-saturation, 1));
+            border-radius: 9999px; overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-bar::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 9999px; padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.1) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 5;
+        }
+
+        .active-blob {
+            position: absolute; height: calc(100% - 16px);
+            background: linear-gradient(135deg, #facc15 0%, #f97316 100%);
+            border-radius: 9999px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1; box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        .blob-glow {
+            position: absolute; height: calc(100% - 16px);
+            background: linear-gradient(135deg, #facc15 0%, #f97316 100%);
+            border-radius: 9999px; filter: blur(15px); opacity: 0.6;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 0;
+        }
+
+        .nav-item {
+            position: relative; z-index: 2; display: flex; flex-direction: column;
+            align-items: center; gap: 4px; padding: 10px 20px; cursor: pointer;
+            color: rgba(255, 255, 255, 0.6); transition: color 0.3s ease; user-select: none;
+        }
+        .nav-item.active { color: #ffffff; }
+        .nav-item svg { width: 24px; height: 24px; transition: all 0.3s ease; }
+        .nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); }
+        .nav-item span { font-size: 12px; font-weight: 600; }
+
+        /* SVG Filter */
+        .glass-surface__filter { pointer-events: none; opacity: 0; position: absolute; }
+
+        /* ریسپانسیو */
+        @media (max-width: 600px) {
+            .nav-item { padding: 10px 14px; }
+            .nav-item span { font-size: 11px; }
+            .products { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- فیلتر شیشه‌ای -->
+    <svg class="glass-surface__filter" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="glass-filter" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2" result="turbulence"/>
+                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="8" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="4" result="blurred"/>
+                <feColorMatrix in="blurred" type="saturate" values="1.8" result="saturated"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- پس‌زمینه متحرک -->
+    <div class="background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- هدر -->
+    <div class="top-header">
+        <h1>🎮 گیم شاپ</h1>
+        <p>مرجع تخصصی خرید و فروش اکانت‌های اورجینال گیم</p>
+    </div>
+
+    <!-- لیست محصولات -->
+    <section class="products" id="product-list">
+        <!-- پابجی -->
+        <div class="card" data-game="pubg">
+            <img class="card-img" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=200&fit=crop" alt="پابجی">
+            <div class="card-body">
+                <span class="card-tag">پابجی موبایل</span>
+                <h3>اکانت پابجی لول ۷۵</h3>
+                <p>رویال پس M24 + اسکین‌های لجندری + ۵۰۰۰ UC</p>
+                <div class="card-footer">
+                    <div class="price">۸۵۰ <small>هزار تومان</small></div>
+                    <a href="https://t.me/YOUR_ID?text=سلام، اکانت پابجی لول ۷۵ را می‌خواهم" target="_blank" class="buy-btn">خرید 🛒</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- کالاف -->
+        <div class="card" data-game="cod">
+            <img class="card-img" src="https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=400&h=200&fit=crop" alt="کالاف">
+            <div class="card-body">
+                <span class="card-tag">کالاف دیوتی</span>
+                <h3>اکانت کالاف لول ۱۵۰</h3>
+                <p>تمام اسلحه‌های لجندری + بتل پس فعال + ۸۰۰۰ CP</p>
+                <div class="card-footer">
+                    <div class="price">۱,۲۰۰ <small>هزار تومان</small></div>
+                    <a href="https://t.me/YOUR_ID?text=سلام، اکانت کالاف لول ۱۵۰ را می‌خواهم" target="_blank" class="buy-btn">خرید 🛒</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- کلش -->
+        <div class="card" data-game="clash">
+            <img class="card-img" src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=200&fit=crop" alt="کلش">
+            <div class="card-body">
+                <span class="card-tag">کلش رویال</span>
+                <h3>اکانت کلش تاون‌هال ۱۵</h3>
+                <p>تمام هیروها مکس + ۳۰۰۰ جم + کلن لول ۲۰</p>
+                <div class="card-footer">
+                    <div class="price">۶۵۰ <small>هزار تومان</small></div>
+                    <a href="https://t.me/YOUR_ID?text=سلام، اکانت کلش تاون‌هال ۱۵ را می‌خواهم" target="_blank" class="buy-btn">خرید 🛒</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- نوار شیشه‌ای شناور (Liquid Glass Nav) -->
+    <div class="nav-container">
+        <div class="nav-bar">
+            <div class="blob-glow" id="blobGlow"></div>
+            <div class="active-blob" id="activeBlob"></div>
+            
+            <div class="nav-item active" data-index="0" data-filter="all">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>خانه</span>
+            </div>
+
+            <div class="nav-item" data-index="1" data-filter="pubg">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                <span>پابجی</span>
+            </div>
+
+            <div class="nav-item" data-index="2" data-filter="cod">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <span>کالاف</span>
+            </div>
+
+            <div class="nav-item" data-index="3" data-filter="clash">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+                <span>کلش</span>
+            </div>
+
+            <div class="nav-item" data-index="4" data-filter="contact">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span>تماس</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== منطق نوار شیشه‌ای =====
+        const navItems = document.querySelectorAll('.nav-item');
+        const activeBlob = document.getElementById('activeBlob');
+        const blobGlow = document.getElementById('blobGlow');
+        const navBar = document.querySelector('.nav-bar');
+
+        function updateActiveBlob(index) {
+            const item = navItems[index];
+            const barRect = navBar.getBoundingClientRect();
+            const itemRect = item.getBoundingClientRect();
+            
+            const left = itemRect.left - barRect.left;
+            const width = itemRect.width;
+            const top = 8;
+            const height = barRect.height - 16;
+
+            activeBlob.style.left = left + 'px';
+            activeBlob.style.width = width + 'px';
+            activeBlob.style.top = top + 'px';
+            activeBlob.style.height = height + 'px';
+
+            blobGlow.style.left = (left - 4) + 'px';
+            blobGlow.style.width = (width + 8) + 'px';
+            blobGlow.style.top = top + 'px';
+            blobGlow.style.height = height + 'px';
+
+            navItems.forEach((navItem, i) => {
+                navItem.classList.toggle('active', i === index);
+            });
+        }
+
+        navItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                updateActiveBlob(index);
+                
+                // اتصال به فیلتر محصولات
+                const filterValue = item.getAttribute('data-filter');
+                filterCards(filterValue);
+            });
+        });
+
+        // ===== منطق فیلتر محصولات =====
+        function filterCards(game) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                if (game === 'all' || game === 'contact' || card.dataset.game === game) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // اگر روی تماس کلیک شد، اسکرول به پایین (یا می‌توانید لینک تلگرام را باز کنید)
+            if (game === 'contact') {
+                window.open('https://t.me/YOUR_ID', '_blank');
+                // بازگرداندن فیلتر به حالت قبل (اختیاری)
+                setTimeout(() => updateActiveBlob(0), 500); 
+            }
+        }
+
+        // انیمیشن ظاهر شدن
+        const style = document.createElement('style');
+        style.textContent = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`;
+        document.head.appendChild(style);
+
+        // راه‌اندازی اولیه
+        window.addEventListener('load', () => updateActiveBlob(0));
+        window.addEventListener('resize', () => {
+            const activeIndex = Array.from(navItems).findIndex(item => item.classList.contains('active'));
+            updateActiveBlob(activeIndex);
+        });
+    </script>
+</body>
+</html>
